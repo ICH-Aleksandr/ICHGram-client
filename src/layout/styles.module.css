@@ -1,0 +1,76 @@
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 244px;
+  border-right: 1px solid #dbdbdb;
+  padding: 28px 16px 24px 25px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+}
+
+.logo {
+  width: 97px;
+  height: auto;
+  margin-bottom: 22px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  color: #000;
+  font-size: 16px;
+  padding: 12px 16px 12px 0px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.navIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.nav a:hover {
+  background: #f0f0f0;
+}
+
+.nav a.active {
+  font-weight: 600;
+}
+
+.logoutBtn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  padding: 12px 16px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 8px;
+  color: #000;
+}
+
+.logoutBtn:hover {
+  background: #f0f0f0;
+}
+
+.main {
+  margin-left: 244px;
+  flex: 1;
+  padding: 24px;
+}

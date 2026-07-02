@@ -1,0 +1,203 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.authBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 350px;
+  margin-top: 8px;
+  gap: 10px;
+}
+
+.card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 1px;
+  padding: 30px 38px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+  box-sizing: border-box;
+}
+
+.switchCard {
+  width: 100%;
+  height: 70px;
+  background: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.switchCard2 {
+  margin-top: 5px;
+}
+
+.logo {
+  width: 190px;
+  height: auto;
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #737373;
+  text-align: center;
+  margin: 0 0 32px;
+}
+
+.input {
+  width: 100%;
+  height: 38px;
+  padding: 9px 12px;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  background: #fafafa;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  margin: 4px 0px 2px;
+}
+
+.input::placeholder {
+  color: #8e8e8e;
+}
+
+.input:focus {
+  border-color: #a8a8a8;
+}
+
+.btn {
+  width: 100%;
+  height: 32px;
+  padding: 7px;
+  background: #0095f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.btn:hover {
+  background: #1877f2;
+}
+
+.error {
+  color: #ed4956;
+  font-size: 13px;
+  text-align: center;
+  margin: 0;
+}
+
+.fieldError {
+  width: 100%;
+  color: #ed4956;
+  font-size: 12px;
+  text-align: left;
+  margin: -2px 0 0;
+  box-sizing: border-box;
+}
+
+.toggle {
+  font-size: 14px;
+  color: #000000;
+  margin: 0;
+}
+
+.toggle span {
+  color: #0095f6;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 22px 0 70px;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: #dbdbdb;
+}
+
+.dividerText {
+  margin: 0 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #737373;
+}
+
+.forgot {
+  font-size: 12px;
+  color: #00376b;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+.disclaimer {
+  font-size: 12px;
+  color: #737373;
+  text-align: center;
+  margin: 27px 0px 18px;
+}
+
+.disclaimer a,
+.terms a {
+  color: #00376b;
+  text-decoration: none;
+}
+
+.disclaimer a:hover,
+.terms a:hover {
+  text-decoration: underline;
+}
+
+.btn2 {
+  margin-bottom: 6px;
+}
+
+.terms {
+  font-size: 12px;
+  color: #737373;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.splitWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  width: 100%;
+}
+
+.graphic {
+  width: 380px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .graphic {
+    display: none;
+  }
+}
