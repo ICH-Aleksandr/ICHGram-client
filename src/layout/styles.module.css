@@ -1,18 +1,25 @@
-.wrapper {
+.page {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
+}
+
+.row {
+  display: flex;
+  flex: 1;
 }
 
 .sidebar {
   width: 244px;
+  flex-shrink: 0;
   border-right: 1px solid #dbdbdb;
   padding: 28px 16px 24px 25px;
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  height: 100vh;
+  align-self: stretch;
+  max-height: 100vh;
 }
 
 .logo {
@@ -70,7 +77,6 @@
 }
 
 .main {
-  margin-left: 244px;
   flex: 1;
   padding: 24px;
 }

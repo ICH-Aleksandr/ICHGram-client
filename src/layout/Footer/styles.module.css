@@ -1,0 +1,29 @@
+.footer {
+  padding: 22px 0px;
+  text-align: center;
+  height: 158px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 45px;
+}
+
+.links a {
+  font-size: 12px;
+  color: #737373;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+  font-size: 12px;
+  color: #737373;
+}
