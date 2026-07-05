@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
+import { postCreated } from "../redux/slices/postsSlice";
 import logo from "../assets/logo/ICHGram_logo01.png";
 import homeIcon from "../assets/icons/Img_Home.png";
 import searchIcon from "../assets/icons/Img_Search.png";
@@ -8,16 +10,24 @@ import exploreIcon from "../assets/icons/Img_Explore.png";
 import messagesIcon from "../assets/icons/Img_Messenger.png";
 import notificationsIcon from "../assets/icons/Img_Notification.png";
 import createIcon from "../assets/icons/Img_Create.png";
+import CreatePostModal from "../components/CreatePostModal";
 import Footer from "./Footer";
 import styles from "./styles.module.css";
 
 function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
+  };
+
+  const handlePostCreated = () => {
+    setShowCreateModal(false);
+    dispatch(postCreated());
+    navigate("/profile");
   };
 
   return (
@@ -62,13 +72,14 @@ function Layout() {
               <img src={notificationsIcon} alt="" className={styles.navIcon} />
               Notifications
             </NavLink>
-            <NavLink
-              to="/create"
-              className={({ isActive }) => (isActive ? styles.active : "")}
+            <button
+              type="button"
+              className={styles.navButton}
+              onClick={() => setShowCreateModal(true)}
             >
               <img src={createIcon} alt="" className={styles.navIcon} />
               Create
-            </NavLink>
+            </button>
             <NavLink
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -88,6 +99,13 @@ function Layout() {
       </div>
 
       <Footer />
+
+      {showCreateModal && (
+        <CreatePostModal
+          onClose={() => setShowCreateModal(false)}
+          onCreated={handlePostCreated}
+        />
+      )}
     </div>
   );
 }

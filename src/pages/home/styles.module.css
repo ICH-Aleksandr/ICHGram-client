@@ -1,7 +1,6 @@
 .page {
   max-width: 960px;
-  margin: 0 auto;
-  padding: 24px 0;
+  padding: 58px 78px;
 }
 
 .grid {
@@ -54,4 +53,10 @@
 .allSeenSub {
   font-size: 14px;
   color: #737373;
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 58px 20px;
+  }
 }

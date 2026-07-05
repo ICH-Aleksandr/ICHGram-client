@@ -5,6 +5,7 @@ import Auth from "./pages/auth";
 import ForgotPassword from "./pages/forgotPassword";
 import Home from "./pages/home";
 import Profile from "./pages/profile";
+import EditProfile from "./pages/editProfile";
 import Search from "./pages/search";
 import Explore from "./pages/explore";
 import NotFound from "./pages/notFound";
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: "explore", element: <Explore /> },
       { path: "profile", element: <Profile /> },
       { path: "profile/:id", element: <Profile /> },
+      { path: "edit-profile", element: <EditProfile /> },
       { path: "*", element: <NotFound /> },
     ],
   },

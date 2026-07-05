@@ -47,6 +47,28 @@
   transition: background 0.2s;
 }
 
+.navButton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  color: #000;
+  font-size: 16px;
+  font-family: inherit;
+  padding: 12px 16px 12px 0px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.navButton:hover {
+  background: #f0f0f0;
+}
+
 .navIcon {
   width: 24px;
   height: 24px;
@@ -78,5 +100,10 @@
 
 .main {
   flex: 1;
-  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 180px;
+  }
 }

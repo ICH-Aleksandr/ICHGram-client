@@ -4,6 +4,8 @@
   border-radius: 8px;
   margin-bottom: 24px;
   overflow: hidden;
+  max-width: 404px;
+  max-height: 716px;
 }
 
 .header {
