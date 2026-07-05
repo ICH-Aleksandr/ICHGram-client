@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logout } from "../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, setCredentials } from "../redux/slices/authSlice";
 import { postCreated } from "../redux/slices/postsSlice";
+import api from "../api/axios";
 import logo from "../assets/logo/ICHGram_logo01.png";
 import homeIcon from "../assets/icons/Img_Home.png";
 import searchIcon from "../assets/icons/Img_Search.png";
@@ -17,12 +18,39 @@ import styles from "./styles.module.css";
 function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.user);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const res = await api.get("/auth/me");
+        dispatch(
+          setCredentials({
+            token: localStorage.getItem("token"),
+            user: {
+              id: res.data._id,
+              username: res.data.username,
+              full_name: res.data.full_name,
+              email: res.data.email,
+              bio: res.data.bio,
+              website: res.data.website,
+              profile_image: res.data.profile_image,
+            },
+          }),
+        );
+      } catch (error) {
+        console.error("Fetch current user error:", error);
+      }
+    };
+
+    fetchMe();
+  }, [dispatch]);
 
   const handlePostCreated = () => {
     setShowCreateModal(false);
@@ -84,6 +112,17 @@ function Layout() {
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
+              {currentUser?.profile_image ? (
+                <img
+                  src={currentUser.profile_image}
+                  alt=""
+                  className={styles.profileIcon}
+                />
+              ) : (
+                <div className={styles.profilePlaceholder}>
+                  {currentUser?.username?.[0]?.toUpperCase()}
+                </div>
+              )}
               Profile
             </NavLink>
           </nav>

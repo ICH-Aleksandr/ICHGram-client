@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import EmojiPicker from "emoji-picker-react";
 import api from "../../api/axios";
 import styles from "./styles.module.css";
 
@@ -9,12 +10,49 @@ function CreatePostModal({ onClose, onCreated }) {
   const [preview, setPreview] = useState(null);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const textareaRef = useRef(null);
+  const emojiPickerRef = useRef(null);
+
+  useEffect(() => {
+    if (!showEmojiPicker) return undefined;
+
+    const handleClickOutside = (e) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showEmojiPicker]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setImageFile(file);
     setPreview(URL.createObjectURL(file));
+  };
+
+  const handleEmojiSelect = (emojiData) => {
+    const emoji = emojiData.emoji;
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? description.length;
+    const end = textarea?.selectionEnd ?? description.length;
+
+    const next = description.slice(0, start) + emoji + description.slice(end);
+    if (next.length > 2200) return;
+
+    setDescription(next);
+    setShowEmojiPicker(false);
+
+    requestAnimationFrame(() => {
+      if (!textarea) return;
+      textarea.focus();
+      const cursor = start + emoji.length;
+      textarea.setSelectionRange(cursor, cursor);
+    });
   };
 
   const handleCreate = async () => {
@@ -86,6 +124,7 @@ function CreatePostModal({ onClose, onCreated }) {
               <span className={styles.userName}>{currentUser?.username}</span>
             </div>
             <textarea
+              ref={textareaRef}
               className={styles.textarea}
               placeholder="Write a caption..."
               value={description}
@@ -95,13 +134,32 @@ function CreatePostModal({ onClose, onCreated }) {
             <div className={styles.footerRow}>
               <span className={styles.charCount}>{description.length} / 2200</span>
             </div>
-            <div className={styles.emojiRow}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-                <line x1="9" y1="9" x2="9.01" y2="9" />
-                <line x1="15" y1="9" x2="15.01" y2="9" />
-              </svg>
+            <div className={styles.emojiWrap} ref={emojiPickerRef}>
+              <button
+                type="button"
+                className={styles.emojiRow}
+                onClick={() => setShowEmojiPicker((prev) => !prev)}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                  <line x1="9" y1="9" x2="9.01" y2="9" />
+                  <line x1="15" y1="9" x2="15.01" y2="9" />
+                </svg>
+              </button>
+
+              {showEmojiPicker && (
+                <div className={styles.emojiPicker}>
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiSelect}
+                    width={280}
+                    height={320}
+                    searchDisabled={false}
+                    skinTonesDisabled
+                    previewConfig={{ showPreview: false }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
