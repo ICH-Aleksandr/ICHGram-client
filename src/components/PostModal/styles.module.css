@@ -141,10 +141,9 @@
 .actionBtn {
   background: none;
   border: none;
-  font-size: 22px;
   cursor: pointer;
-  padding: 0;
-  line-height: 1;
+  display: flex;
+  align-items: center;
   transition: transform 0.1s;
 }
 
@@ -152,7 +151,7 @@
   transform: scale(1.1);
 }
 
-.liked {
+.liked svg {
   color: #ed4956;
 }
 
@@ -177,6 +176,33 @@
   gap: 8px;
 }
 
+.emojiWrap {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.emojiBtn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.emojiPicker {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 8px;
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .commentInput input {
   flex: 1;
   border: none;
@@ -195,6 +221,6 @@
 }
 
 .commentInput button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+  color: #b2dffc;
+  cursor: default;
 }

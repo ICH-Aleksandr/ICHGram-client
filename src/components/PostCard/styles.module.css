@@ -102,17 +102,16 @@
 
 .actions {
   display: flex;
-  gap: 12px;
-  padding: 10px 16px 4px;
+  gap: 14px;
+  padding: 10px 2px;
 }
 
 .actionBtn {
   background: none;
   border: none;
-  font-size: 22px;
   cursor: pointer;
-  padding: 0;
-  line-height: 1;
+  display: flex;
+  align-items: center;
   transition: transform 0.1s;
 }
 
@@ -120,19 +119,19 @@
   transform: scale(1.1);
 }
 
-.liked {
+.liked svg {
   color: #ed4956;
 }
 
 .likes {
-  padding: 0 16px;
   font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 4px;
+  font-size: 12px;
+  padding-left: 2px;
+  margin-bottom: 8px;
 }
 
 .descriptionWrapper {
-  padding: 2px 16px 8px;
+  padding-left: 2px;
 }
 
 .description {
