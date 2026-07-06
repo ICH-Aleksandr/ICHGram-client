@@ -70,35 +70,35 @@ function Layout() {
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={homeIcon} alt="" className={styles.navIcon} />
-              Home
+              <span className={styles.navLabel}>Home</span>
             </NavLink>
             <NavLink
               to="/search"
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={searchIcon} alt="" className={styles.navIcon} />
-              Search
+              <span className={styles.navLabel}>Search</span>
             </NavLink>
             <NavLink
               to="/explore"
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={exploreIcon} alt="" className={styles.navIcon} />
-              Explore
+              <span className={styles.navLabel}>Explore</span>
             </NavLink>
             <NavLink
               to="/messages"
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={messagesIcon} alt="" className={styles.navIcon} />
-              Messages
+              <span className={styles.navLabel}>Messages</span>
             </NavLink>
             <NavLink
               to="/notifications"
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={notificationsIcon} alt="" className={styles.navIcon} />
-              Notifications
+              <span className={styles.navLabel}>Notifications</span>
             </NavLink>
             <button
               type="button"
@@ -106,7 +106,7 @@ function Layout() {
               onClick={() => setShowCreateModal(true)}
             >
               <img src={createIcon} alt="" className={styles.navIcon} />
-              Create
+              <span className={styles.navLabel}>Create</span>
             </button>
             <NavLink
               to="/profile"
@@ -123,8 +123,30 @@ function Layout() {
                   {currentUser?.username?.[0]?.toUpperCase()}
                 </div>
               )}
-              Profile
+              <span className={styles.navLabel}>Profile</span>
             </NavLink>
+            <button
+              type="button"
+              className={`${styles.navButton} ${styles.mobileLogoutBtn}`}
+              onClick={handleLogout}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#000"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={styles.navIcon}
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span className={styles.navLabel}>Log out</span>
+            </button>
           </nav>
 
           <button className={styles.logoutBtn} onClick={handleLogout}>
