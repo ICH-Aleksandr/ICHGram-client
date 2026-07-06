@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import api from "../../api/axios";
 import PostCard from "../../components/PostCard";
+import updateIndicator from "../../assets/images/UpdateIndicator.png";
 import styles from "./styles.module.css";
 
 function Home() {
@@ -98,17 +99,19 @@ function Home() {
 
       {posts.length > 0 && (
         <div className={styles.allSeen}>
-          <div className={styles.allSeenIcon}>✓</div>
+          <img
+            src={updateIndicator}
+            alt="You've seen all the updates"
+            className={styles.allSeenIcon}
+          />
           <p className={styles.allSeenTitle}>You've seen all the updates</p>
           <p className={styles.allSeenSub}>
-            You have viewed all new publications.
+            You have viewed all new publications
           </p>
         </div>
       )}
 
-      {posts.length === 0 && (
-        <div className={styles.empty}>No posts yet</div>
-      )}
+      {posts.length === 0 && <div className={styles.empty}>No posts yet</div>}
     </div>
   );
 }
