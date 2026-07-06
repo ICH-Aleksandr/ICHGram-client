@@ -1,16 +1,34 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import api from "../../api/axios";
 import PostCard from "../../components/PostCard";
 import styles from "./styles.module.css";
 
 function Home() {
+  const currentUser = useSelector((state) => state.auth.user);
   const [posts, setPosts] = useState([]);
+  const [followingIds, setFollowingIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const postsRes = await api.get("/posts");
+
+        let initialFollowingIds = new Set();
+        if (currentUser?.id) {
+          try {
+            const followingRes = await api.get(
+              `/follow/${currentUser.id}/following`,
+            );
+            initialFollowingIds = new Set(
+              followingRes.data.following.map((f) => f.following_id._id),
+            );
+          } catch {
+            initialFollowingIds = new Set();
+          }
+        }
+        setFollowingIds(initialFollowingIds);
 
         const postsWithLikes = await Promise.all(
           postsRes.data.map(async (post) => {
@@ -22,10 +40,18 @@ function Home() {
               return {
                 ...post,
                 likesCount: likesRes.data.count,
+                likedByMe: likesRes.data.likes.some(
+                  (like) => like.user._id === currentUser?.id,
+                ),
                 comments: commentsRes.data,
               };
             } catch {
-              return { ...post, likesCount: 0, comments: [] };
+              return {
+                ...post,
+                likesCount: 0,
+                likedByMe: false,
+                comments: [],
+              };
             }
           }),
         );
@@ -39,7 +65,19 @@ function Home() {
     };
 
     fetchPosts();
-  }, []);
+  }, [currentUser?.id]);
+
+  const handleFollowChange = (authorId, isFollowing) => {
+    setFollowingIds((prev) => {
+      const next = new Set(prev);
+      if (isFollowing) {
+        next.add(authorId);
+      } else {
+        next.delete(authorId);
+      }
+      return next;
+    });
+  };
 
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;
@@ -49,7 +87,12 @@ function Home() {
     <div className={styles.page}>
       <div className={styles.grid}>
         {posts.map((post) => (
-          <PostCard key={post._id} post={post} />
+          <PostCard
+            key={post._id}
+            post={post}
+            isFollowing={followingIds.has(post.author._id)}
+            onFollowChange={handleFollowChange}
+          />
         ))}
       </div>
 
