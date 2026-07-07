@@ -5,7 +5,7 @@ import api from "../../api/axios";
 import PostModal from "../PostModal";
 import styles from "./styles.module.css";
 
-function PostCard({ post, isFollowing, onFollowChange }) {
+function PostCard({ post, isFollowing, onFollowChange, onPostDeleted }) {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.auth.user);
 
@@ -177,6 +177,9 @@ function PostCard({ post, isFollowing, onFollowChange }) {
           onLikeToggle={handleLike}
           onCommentAdded={handleCommentAdded}
           onClose={() => setShowPostModal(false)}
+          isFollowing={isFollowing}
+          onFollowChange={onFollowChange}
+          onPostDeleted={onPostDeleted}
         />
       )}
     </div>

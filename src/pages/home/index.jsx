@@ -80,6 +80,10 @@ function Home() {
     });
   };
 
+  const handlePostDeleted = (postId) => {
+    setPosts((prev) => prev.filter((p) => p._id !== postId));
+  };
+
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;
   }
@@ -93,6 +97,7 @@ function Home() {
             post={post}
             isFollowing={followingIds.has(post.author._id)}
             onFollowChange={handleFollowChange}
+            onPostDeleted={handlePostDeleted}
           />
         ))}
       </div>

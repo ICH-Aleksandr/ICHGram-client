@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import EmojiPicker from "emoji-picker-react";
 import api from "../../api/axios";
+import PostMenu from "../PostMenu";
 import styles from "./styles.module.css";
 
 function PostModal({
@@ -12,12 +14,18 @@ function PostModal({
   onLikeToggle,
   onCommentAdded,
   onClose,
+  isFollowing,
+  onFollowChange,
+  onPostDeleted,
 }) {
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.user);
+  const isOwnPost = currentUser?.id === post.author._id;
   const [commentText, setCommentText] = useState("");
   const [posting, setPosting] = useState(false);
   const [now] = useState(() => Date.now());
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showPostMenu, setShowPostMenu] = useState(false);
 
   const commentInputRef = useRef(null);
   const emojiPickerRef = useRef(null);
@@ -69,6 +77,30 @@ function PostModal({
     navigate(`/profile/${userId}`);
   };
 
+  const handleFollow = async () => {
+    try {
+      if (isFollowing) {
+        await api.delete(`/follow/${post.author._id}`);
+      } else {
+        await api.post(`/follow/${post.author._id}`);
+      }
+      onFollowChange?.(post.author._id, !isFollowing);
+    } catch (error) {
+      console.error("Follow error:", error);
+    }
+  };
+
+  const handleDeletePost = async () => {
+    try {
+      await api.delete(`/posts/${post._id}`);
+      setShowPostMenu(false);
+      onPostDeleted?.(post._id);
+      onClose();
+    } catch (error) {
+      console.error("Delete post error:", error);
+    }
+  };
+
   const handleAddComment = async () => {
     if (!commentText.trim() || posting) return;
     try {
@@ -88,6 +120,14 @@ function PostModal({
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        {isOwnPost && (
+          <button
+            className={styles.menuBtn}
+            onClick={() => setShowPostMenu(true)}
+          >
+            ···
+          </button>
+        )}
         <button className={styles.closeBtn} onClick={onClose}>
           ✕
         </button>
@@ -118,6 +158,15 @@ function PostModal({
               </div>
               <span className={styles.username}>{post.author.username}</span>
             </div>
+
+            {!isOwnPost && (
+              <button
+                className={`${styles.followBtn} ${isFollowing ? styles.unfollowBtn : ""}`}
+                onClick={handleFollow}
+              >
+                {isFollowing ? "Unfollow" : "Follow"}
+              </button>
+            )}
           </div>
 
           <div className={styles.commentsList}>
@@ -277,6 +326,14 @@ function PostModal({
           </div>
         </div>
       </div>
+
+      {showPostMenu && (
+        <PostMenu
+          onDelete={handleDeletePost}
+          onEdit={() => setShowPostMenu(false)}
+          onClose={() => setShowPostMenu(false)}
+        />
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import api from "../../api/axios";
 import PostMenu from "../../components/PostMenu";
+import PostModal from "../../components/PostModal";
 import linkIcon from "../../assets/icons/Img_link.png";
 import styles from "./styles.module.css";
 
@@ -20,6 +21,7 @@ function Profile() {
   const [loading, setLoading] = useState(true);
 
   const [postMenu, setPostMenu] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   const profileId = id || currentUser?.id;
   const isOwnProfile = !id || id === currentUser?.id;
@@ -78,6 +80,57 @@ function Profile() {
     } catch (error) {
       console.error("Delete post error:", error);
     }
+  };
+
+  const openPostModal = async (post) => {
+    try {
+      const [likesRes, commentsRes] = await Promise.all([
+        api.get(`/likes/${post._id}`),
+        api.get(`/comments/${post._id}`),
+      ]);
+      setSelectedPost({
+        ...post,
+        likesCount: likesRes.data.count,
+        likedByMe: likesRes.data.likes.some(
+          (like) => like.user._id === currentUser?.id,
+        ),
+        comments: commentsRes.data,
+      });
+    } catch (error) {
+      console.error("Post fetch error:", error);
+      setSelectedPost({ ...post, likesCount: 0, likedByMe: false, comments: [] });
+    }
+  };
+
+  const handleModalLike = async () => {
+    if (!selectedPost) return;
+    try {
+      await api.post(`/likes/${selectedPost._id}`);
+      setSelectedPost((prev) => ({
+        ...prev,
+        likedByMe: !prev.likedByMe,
+        likesCount: prev.likedByMe ? prev.likesCount - 1 : prev.likesCount + 1,
+      }));
+    } catch (error) {
+      console.error("Like error:", error);
+    }
+  };
+
+  const handleModalCommentAdded = (comment) => {
+    setSelectedPost((prev) => ({
+      ...prev,
+      comments: [...prev.comments, comment],
+    }));
+  };
+
+  const handleModalFollowChange = (authorId, nextIsFollowing) => {
+    setIsFollowing(nextIsFollowing);
+    setFollowersCount((prev) => (nextIsFollowing ? prev + 1 : prev - 1));
+  };
+
+  const handleModalPostDeleted = (postId) => {
+    setPosts((prev) => prev.filter((p) => p._id !== postId));
+    setSelectedPost(null);
   };
 
   if (loading) return <div className={styles.loading}>Loading...</div>;
@@ -141,10 +194,20 @@ function Profile() {
 
       <div className={styles.postsGrid}>
         {posts.map((post) => (
-          <div key={post._id} className={styles.postThumb}>
+          <div
+            key={post._id}
+            className={styles.postThumb}
+            onClick={() => openPostModal(post)}
+          >
             <img src={post.image} alt="post" />
             {isOwnProfile && (
-              <button className={styles.menuBtn} onClick={() => setPostMenu(post._id)}>
+              <button
+                className={styles.menuBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPostMenu(post._id);
+                }}
+              >
                 ···
               </button>
             )}
@@ -157,6 +220,21 @@ function Profile() {
           onDelete={() => handleDeletePost(postMenu)}
           onEdit={() => setPostMenu(null)}
           onClose={() => setPostMenu(null)}
+        />
+      )}
+
+      {selectedPost && (
+        <PostModal
+          post={selectedPost}
+          comments={selectedPost.comments}
+          likesCount={selectedPost.likesCount}
+          liked={selectedPost.likedByMe}
+          onLikeToggle={handleModalLike}
+          onCommentAdded={handleModalCommentAdded}
+          onClose={() => setSelectedPost(null)}
+          isFollowing={isFollowing}
+          onFollowChange={handleModalFollowChange}
+          onPostDeleted={handleModalPostDeleted}
         />
       )}
     </div>
