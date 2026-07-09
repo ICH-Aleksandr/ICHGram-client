@@ -100,7 +100,8 @@
   background: #f0f0f0;
 }
 
-.nav a.active {
+.nav a.active,
+.navButton.active {
   font-weight: 600;
 }
 

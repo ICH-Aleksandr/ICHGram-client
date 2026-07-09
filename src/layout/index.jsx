@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setCredentials } from "../redux/slices/authSlice";
 import { postCreated } from "../redux/slices/postsSlice";
@@ -12,18 +12,34 @@ import messagesIcon from "../assets/icons/Img_Messenger.png";
 import notificationsIcon from "../assets/icons/Img_Notification.png";
 import createIcon from "../assets/icons/Img_Create.png";
 import CreatePostModal from "../components/CreatePostModal";
+import SearchPanel from "../components/SearchPanel";
 import Footer from "./Footer";
 import styles from "./styles.module.css";
 
 function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const currentUser = useSelector((state) => state.auth.user);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSearchPanel, setShowSearchPanel] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(location.pathname);
+
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname);
+    setShowSearchPanel(false);
+  }
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
+  };
+
+  const closeSearchPanel = () => setShowSearchPanel(false);
+  const toggleSearchPanel = () => setShowSearchPanel((prev) => !prev);
+  const openCreateModal = () => {
+    closeSearchPanel();
+    setShowCreateModal(true);
   };
 
   useEffect(() => {
@@ -67,20 +83,23 @@ function Layout() {
           <nav className={styles.nav}>
             <NavLink
               to="/"
+              onClick={closeSearchPanel}
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={homeIcon} alt="" className={styles.navIcon} />
               <span className={styles.navLabel}>Home</span>
             </NavLink>
-            <NavLink
-              to="/search"
-              className={({ isActive }) => (isActive ? styles.active : "")}
+            <button
+              type="button"
+              className={`${styles.navButton} ${showSearchPanel ? styles.active : ""}`}
+              onClick={toggleSearchPanel}
             >
               <img src={searchIcon} alt="" className={styles.navIcon} />
               <span className={styles.navLabel}>Search</span>
-            </NavLink>
+            </button>
             <NavLink
               to="/explore"
+              onClick={closeSearchPanel}
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={exploreIcon} alt="" className={styles.navIcon} />
@@ -88,6 +107,7 @@ function Layout() {
             </NavLink>
             <NavLink
               to="/messages"
+              onClick={closeSearchPanel}
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={messagesIcon} alt="" className={styles.navIcon} />
@@ -95,6 +115,7 @@ function Layout() {
             </NavLink>
             <NavLink
               to="/notifications"
+              onClick={closeSearchPanel}
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               <img src={notificationsIcon} alt="" className={styles.navIcon} />
@@ -103,13 +124,14 @@ function Layout() {
             <button
               type="button"
               className={styles.navButton}
-              onClick={() => setShowCreateModal(true)}
+              onClick={openCreateModal}
             >
               <img src={createIcon} alt="" className={styles.navIcon} />
               <span className={styles.navLabel}>Create</span>
             </button>
             <NavLink
               to="/profile"
+              onClick={closeSearchPanel}
               className={({ isActive }) => (isActive ? styles.active : "")}
             >
               {currentUser?.profile_image ? (
@@ -159,13 +181,17 @@ function Layout() {
         </main>
       </div>
 
-      <Footer />
+      <Footer onOpenSearch={toggleSearchPanel} onOpenCreate={openCreateModal} />
 
       {showCreateModal && (
         <CreatePostModal
           onClose={() => setShowCreateModal(false)}
           onCreated={handlePostCreated}
         />
+      )}
+
+      {showSearchPanel && (
+        <SearchPanel onClose={() => setShowSearchPanel(false)} />
       )}
     </div>
   );
