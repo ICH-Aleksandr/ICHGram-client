@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import api from "../../api/axios";
@@ -186,4 +186,4 @@ function PostCard({ post, isFollowing, onFollowChange, onPostDeleted }) {
   );
 }
 
-export default PostCard;
+export default memo(PostCard);

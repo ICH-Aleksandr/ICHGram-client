@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import api from "../../api/axios";
 import PostCard from "../../components/PostCard";
@@ -12,22 +12,22 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!currentUser?.id) return;
+
     const fetchPosts = async () => {
       try {
         const postsRes = await api.get("/posts");
 
         let initialFollowingIds = new Set();
-        if (currentUser?.id) {
-          try {
-            const followingRes = await api.get(
-              `/follow/${currentUser.id}/following`,
-            );
-            initialFollowingIds = new Set(
-              followingRes.data.following.map((f) => f.following_id._id),
-            );
-          } catch {
-            initialFollowingIds = new Set();
-          }
+        try {
+          const followingRes = await api.get(
+            `/follow/${currentUser.id}/following`,
+          );
+          initialFollowingIds = new Set(
+            followingRes.data.following.map((f) => f.following_id._id),
+          );
+        } catch {
+          initialFollowingIds = new Set();
         }
         setFollowingIds(initialFollowingIds);
 
@@ -42,7 +42,7 @@ function Home() {
                 ...post,
                 likesCount: likesRes.data.count,
                 likedByMe: likesRes.data.likes.some(
-                  (like) => like.user._id === currentUser?.id,
+                  (like) => like.user._id === currentUser.id,
                 ),
                 comments: commentsRes.data,
               };
@@ -68,7 +68,7 @@ function Home() {
     fetchPosts();
   }, [currentUser?.id]);
 
-  const handleFollowChange = (authorId, isFollowing) => {
+  const handleFollowChange = useCallback((authorId, isFollowing) => {
     setFollowingIds((prev) => {
       const next = new Set(prev);
       if (isFollowing) {
@@ -78,11 +78,11 @@ function Home() {
       }
       return next;
     });
-  };
+  }, []);
 
-  const handlePostDeleted = (postId) => {
+  const handlePostDeleted = useCallback((postId) => {
     setPosts((prev) => prev.filter((p) => p._id !== postId));
-  };
+  }, []);
 
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;

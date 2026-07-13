@@ -16,6 +16,11 @@ function CreatePostModal({ onClose, onCreated }) {
   const emojiPickerRef = useRef(null);
 
   useEffect(() => {
+    if (!preview) return undefined;
+    return () => URL.revokeObjectURL(preview);
+  }, [preview]);
+
+  useEffect(() => {
     if (!showEmojiPicker) return undefined;
 
     const handleClickOutside = (e) => {

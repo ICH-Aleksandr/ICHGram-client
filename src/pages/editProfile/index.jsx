@@ -41,6 +41,11 @@ function EditProfile() {
     if (currentUser?.id) fetchProfile();
   }, [currentUser?.id]);
 
+  useEffect(() => {
+    if (!preview?.startsWith("blob:")) return undefined;
+    return () => URL.revokeObjectURL(preview);
+  }, [preview]);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;

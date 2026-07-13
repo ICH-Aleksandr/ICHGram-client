@@ -6,7 +6,6 @@ import ForgotPassword from "./pages/forgotPassword";
 import Home from "./pages/home";
 import Profile from "./pages/profile";
 import EditProfile from "./pages/editProfile";
-import Search from "./pages/search";
 import Explore from "./pages/explore";
 import NotFound from "./pages/notFound";
 import "./App.css";
@@ -34,7 +33,6 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Home /> },
-      { path: "search", element: <Search /> },
       { path: "explore", element: <Explore /> },
       { path: "profile", element: <Profile /> },
       { path: "profile/:id", element: <Profile /> },
