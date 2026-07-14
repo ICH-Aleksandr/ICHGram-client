@@ -4,11 +4,12 @@ import EmojiPicker from "emoji-picker-react";
 import api from "../../api/axios";
 import styles from "./styles.module.css";
 
-function CreatePostModal({ onClose, onCreated }) {
+function CreatePostModal({ onClose, onCreated, post, onUpdated }) {
   const currentUser = useSelector((state) => state.auth.user);
+  const isEditing = Boolean(post);
   const [imageFile, setImageFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [description, setDescription] = useState("");
+  const [preview, setPreview] = useState(post?.image || null);
+  const [description, setDescription] = useState(post?.description || "");
   const [loading, setLoading] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -77,25 +78,60 @@ function CreatePostModal({ onClose, onCreated }) {
     }
   };
 
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("description", description);
+      if (imageFile) formData.append("image", imageFile);
+      const response = await api.put(`/posts/${post._id}`, formData);
+      onUpdated(response.data);
+      onClose();
+    } catch (error) {
+      console.error("Update post error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
 
         <div className={styles.header}>
-          <span className={styles.title}>Create new post</span>
+          <span className={styles.title}>
+            {isEditing ? "Edit post" : "Create new post"}
+          </span>
           <button
             className={styles.shareBtn}
-            onClick={handleCreate}
-            disabled={!imageFile || loading}
+            onClick={isEditing ? handleSave : handleCreate}
+            disabled={isEditing ? loading : !imageFile || loading}
           >
-            {loading ? "Sharing..." : "Share"}
+            {isEditing
+              ? loading
+                ? "Saving..."
+                : "Save"
+              : loading
+                ? "Sharing..."
+                : "Share"}
           </button>
         </div>
 
         <div className={styles.body}>
           <div className={styles.imageArea}>
             {preview ? (
-              <img src={preview} alt="preview" className={styles.preview} />
+              <label className={styles.previewWrap}>
+                <img src={preview} alt="preview" className={styles.preview} />
+                {isEditing && (
+                  <span className={styles.changePhoto}>Change photo</span>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  hidden
+                />
+              </label>
             ) : (
               <label className={styles.uploadArea}>
                 <div className={styles.uploadIcon}>

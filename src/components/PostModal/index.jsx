@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import EmojiPicker from "emoji-picker-react";
 import api from "../../api/axios";
 import PostMenu from "../PostMenu";
+import CreatePostModal from "../CreatePostModal";
 import styles from "./styles.module.css";
 
 function PostModal({
@@ -17,6 +18,7 @@ function PostModal({
   isFollowing,
   onFollowChange,
   onPostDeleted,
+  onPostUpdated,
 }) {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.auth.user);
@@ -26,6 +28,7 @@ function PostModal({
   const [now] = useState(() => Date.now());
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showPostMenu, setShowPostMenu] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const commentInputRef = useRef(null);
   const emojiPickerRef = useRef(null);
@@ -99,6 +102,13 @@ function PostModal({
     } catch (error) {
       console.error("Delete post error:", error);
     }
+  };
+
+  const handlePostUpdated = (updatedPost) => {
+    onPostUpdated?.(post._id, {
+      description: updatedPost.description,
+      image: updatedPost.image,
+    });
   };
 
   const handleAddComment = async () => {
@@ -330,8 +340,19 @@ function PostModal({
       {showPostMenu && (
         <PostMenu
           onDelete={handleDeletePost}
-          onEdit={() => setShowPostMenu(false)}
+          onEdit={() => {
+            setShowPostMenu(false);
+            setShowEditModal(true);
+          }}
           onClose={() => setShowPostMenu(false)}
+        />
+      )}
+
+      {showEditModal && (
+        <CreatePostModal
+          post={post}
+          onClose={() => setShowEditModal(false)}
+          onUpdated={handlePostUpdated}
         />
       )}
     </div>

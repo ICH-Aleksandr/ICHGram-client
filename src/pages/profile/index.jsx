@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import api from "../../api/axios";
 import PostMenu from "../../components/PostMenu";
 import PostModal from "../../components/PostModal";
+import CreatePostModal from "../../components/CreatePostModal";
 import linkIcon from "../../assets/icons/Img_link.png";
 import styles from "./styles.module.css";
 
@@ -22,6 +23,7 @@ function Profile() {
 
   const [postMenu, setPostMenu] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [editingPost, setEditingPost] = useState(null);
 
   const profileId = id || currentUser?.id;
   const isOwnProfile = !id || id === currentUser?.id;
@@ -133,6 +135,23 @@ function Profile() {
     setSelectedPost(null);
   };
 
+  const applyPostUpdate = (postId, updatedFields) => {
+    setPosts((prev) =>
+      prev.map((p) => (p._id === postId ? { ...p, ...updatedFields } : p)),
+    );
+    setSelectedPost((prev) =>
+      prev && prev._id === postId ? { ...prev, ...updatedFields } : prev,
+    );
+  };
+
+  const handleGridPostUpdated = (updatedPost) => {
+    applyPostUpdate(updatedPost._id, {
+      description: updatedPost.description,
+      image: updatedPost.image,
+    });
+    setEditingPost(null);
+  };
+
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (!user) return <div className={styles.loading}>User not found</div>;
 
@@ -218,8 +237,19 @@ function Profile() {
       {postMenu && (
         <PostMenu
           onDelete={() => handleDeletePost(postMenu)}
-          onEdit={() => setPostMenu(null)}
+          onEdit={() => {
+            setEditingPost(posts.find((p) => p._id === postMenu) || null);
+            setPostMenu(null);
+          }}
           onClose={() => setPostMenu(null)}
+        />
+      )}
+
+      {editingPost && (
+        <CreatePostModal
+          post={editingPost}
+          onClose={() => setEditingPost(null)}
+          onUpdated={handleGridPostUpdated}
         />
       )}
 
@@ -235,6 +265,7 @@ function Profile() {
           isFollowing={isFollowing}
           onFollowChange={handleModalFollowChange}
           onPostDeleted={handleModalPostDeleted}
+          onPostUpdated={applyPostUpdate}
         />
       )}
     </div>

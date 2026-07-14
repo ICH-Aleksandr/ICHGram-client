@@ -5,7 +5,13 @@ import api from "../../api/axios";
 import PostModal from "../PostModal";
 import styles from "./styles.module.css";
 
-function PostCard({ post, isFollowing, onFollowChange, onPostDeleted }) {
+function PostCard({
+  post,
+  isFollowing,
+  onFollowChange,
+  onPostDeleted,
+  onPostUpdated,
+}) {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.auth.user);
 
@@ -180,6 +186,7 @@ function PostCard({ post, isFollowing, onFollowChange, onPostDeleted }) {
           isFollowing={isFollowing}
           onFollowChange={onFollowChange}
           onPostDeleted={onPostDeleted}
+          onPostUpdated={onPostUpdated}
         />
       )}
     </div>

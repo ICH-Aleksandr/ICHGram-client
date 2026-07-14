@@ -84,6 +84,12 @@ function Home() {
     setPosts((prev) => prev.filter((p) => p._id !== postId));
   }, []);
 
+  const handlePostUpdated = useCallback((postId, updatedFields) => {
+    setPosts((prev) =>
+      prev.map((p) => (p._id === postId ? { ...p, ...updatedFields } : p)),
+    );
+  }, []);
+
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;
   }
@@ -98,6 +104,7 @@ function Home() {
             isFollowing={followingIds.has(post.author._id)}
             onFollowChange={handleFollowChange}
             onPostDeleted={handlePostDeleted}
+            onPostUpdated={handlePostUpdated}
           />
         ))}
       </div>

@@ -102,6 +102,15 @@ function Explore() {
     setSelectedPost(null);
   };
 
+  const handleModalPostUpdated = (postId, updatedFields) => {
+    setPosts((prev) =>
+      prev.map((p) => (p._id === postId ? { ...p, ...updatedFields } : p)),
+    );
+    setSelectedPost((prev) =>
+      prev && prev._id === postId ? { ...prev, ...updatedFields } : prev,
+    );
+  };
+
   if (loading) return <div className={styles.loading}>Loading...</div>;
 
   return (
@@ -132,6 +141,7 @@ function Explore() {
           isFollowing={followingIds.has(selectedPost.author._id)}
           onFollowChange={handleModalFollowChange}
           onPostDeleted={handleModalPostDeleted}
+          onPostUpdated={handleModalPostUpdated}
         />
       )}
     </div>
