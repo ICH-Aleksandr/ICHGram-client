@@ -37,8 +37,6 @@ function SearchPanel({ onClose }) {
   useEffect(() => {
     const trimmed = query.trim();
     if (!trimmed) {
-      // results не используются, пока isSearching === false (см. `list`
-      // ниже), поэтому очищать их синхронно в эффекте не нужно.
       return undefined;
     }
 

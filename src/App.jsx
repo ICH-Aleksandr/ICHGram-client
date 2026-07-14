@@ -7,6 +7,7 @@ import Home from "./pages/home";
 import Profile from "./pages/profile";
 import EditProfile from "./pages/editProfile";
 import Explore from "./pages/explore";
+import Messages from "./pages/messages";
 import NotFound from "./pages/notFound";
 import "./App.css";
 
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "explore", element: <Explore /> },
+      { path: "messages", element: <Messages /> },
       { path: "profile", element: <Profile /> },
       { path: "profile/:id", element: <Profile /> },
       { path: "edit-profile", element: <EditProfile /> },
