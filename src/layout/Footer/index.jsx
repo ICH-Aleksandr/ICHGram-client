@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styles from "./styles.module.css";
 
-function Footer({ onOpenSearch, onOpenCreate }) {
+function Footer({ onOpenSearch, onOpenNotifications, onOpenCreate }) {
   return (
     <footer className={styles.footer}>
       <nav className={styles.links}>
@@ -11,7 +11,13 @@ function Footer({ onOpenSearch, onOpenCreate }) {
         </button>
         <NavLink to="/explore">Explore</NavLink>
         <NavLink to="/messages">Messages</NavLink>
-        <NavLink to="/notifications">Notifications</NavLink>
+        <button
+          type="button"
+          className={styles.linkBtn}
+          onClick={onOpenNotifications}
+        >
+          Notifications
+        </button>
         <button type="button" className={styles.linkBtn} onClick={onOpenCreate}>
           Create
         </button>

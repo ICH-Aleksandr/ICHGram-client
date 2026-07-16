@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import { getSocket } from "../../api/socket";
 import styles from "./styles.module.css";
@@ -24,6 +25,8 @@ function Avatar({ user, className }) {
 
 function Messages() {
   const currentUser = useSelector((state) => state.auth.user);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [conversations, setConversations] = useState([]);
   const [activeUser, setActiveUser] = useState(null);
@@ -95,6 +98,25 @@ function Messages() {
       setMessages([]);
     }
   };
+
+  useEffect(() => {
+    const openUserId = location.state?.openUserId;
+    if (!openUserId) return;
+
+    const openFromNotification = async () => {
+      try {
+        const res = await api.get(`/users/${openUserId}`);
+        await openConversation(res.data);
+      } catch (error) {
+        console.error("Open conversation error:", error);
+      } finally {
+        navigate(location.pathname, { replace: true, state: {} });
+      }
+    };
+
+    openFromNotification();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
   const handleSend = async (e) => {
     e.preventDefault();

@@ -1,12 +1,5 @@
 .page {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
-}
-
-.row {
-  display: flex;
-  flex: 1;
 }
 
 .sidebar {
@@ -16,10 +9,19 @@
   padding: 28px 16px 24px 25px;
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: fixed;
   top: 0;
-  align-self: stretch;
-  max-height: 100vh;
+  left: 0;
+  height: 100vh;
+  background: #fff;
+  z-index: 100;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-left: 244px;
 }
 
 .logo {
@@ -73,6 +75,23 @@
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+}
+
+.navIconWrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.unreadDot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ed4956;
+  border: 1.5px solid #fff;
 }
 
 .profileIcon {
@@ -132,11 +151,15 @@
   .sidebar {
     width: 180px;
   }
+
+  .content {
+    margin-left: 180px;
+  }
 }
 
 @media (max-width: 480px) {
-  .row {
-    display: block;
+  .content {
+    margin-left: 0;
   }
 
   .sidebar {
@@ -146,7 +169,6 @@
     left: 0;
     right: 0;
     width: 100%;
-    max-height: none;
     height: 56px;
     flex-direction: row;
     align-items: center;
