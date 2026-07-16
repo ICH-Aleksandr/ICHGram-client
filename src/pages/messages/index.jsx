@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import EmojiPicker from "emoji-picker-react";
 import api from "../../api/axios";
 import { getSocket } from "../../api/socket";
 import styles from "./styles.module.css";
@@ -37,13 +38,29 @@ function Messages() {
   const [showNewMessage, setShowNewMessage] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const activeUserRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const chatInputRef = useRef(null);
+  const emojiPickerRef = useRef(null);
 
   useEffect(() => {
     activeUserRef.current = activeUser;
   }, [activeUser]);
+
+  useEffect(() => {
+    if (!showEmojiPicker) return undefined;
+
+    const handleClickOutside = (e) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showEmojiPicker]);
 
   const fetchConversations = async () => {
     try {
@@ -133,6 +150,24 @@ function Messages() {
     } catch (error) {
       console.error("Send message error:", error);
     }
+  };
+
+  const handleEmojiSelect = (emojiData) => {
+    const emoji = emojiData.emoji;
+    const input = chatInputRef.current;
+    const start = input?.selectionStart ?? text.length;
+    const end = input?.selectionEnd ?? text.length;
+
+    const next = text.slice(0, start) + emoji + text.slice(end);
+    setText(next);
+    setShowEmojiPicker(false);
+
+    requestAnimationFrame(() => {
+      if (!input) return;
+      input.focus();
+      const cursor = start + emoji.length;
+      input.setSelectionRange(cursor, cursor);
+    });
   };
 
   useEffect(() => {
@@ -256,7 +291,44 @@ function Messages() {
             </div>
 
             <form className={styles.chatInputRow} onSubmit={handleSend}>
+              <div className={styles.emojiWrap} ref={emojiPickerRef}>
+                <button
+                  type="button"
+                  className={styles.emojiBtn}
+                  onClick={() => setShowEmojiPicker((prev) => !prev)}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                  </svg>
+                </button>
+
+                {showEmojiPicker && (
+                  <div className={styles.emojiPicker}>
+                    <EmojiPicker
+                      onEmojiClick={handleEmojiSelect}
+                      width={280}
+                      height={320}
+                      searchDisabled={false}
+                      skinTonesDisabled
+                      previewConfig={{ showPreview: false }}
+                    />
+                  </div>
+                )}
+              </div>
               <input
+                ref={chatInputRef}
                 type="text"
                 placeholder="Message..."
                 value={text}

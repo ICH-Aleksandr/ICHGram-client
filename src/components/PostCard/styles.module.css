@@ -159,3 +159,9 @@
 .more:hover {
   color: #262626;
 }
+
+@media (max-width: 480px) {
+  .card {
+    height: 580px;
+  }
+}
