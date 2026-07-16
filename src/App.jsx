@@ -1,11 +1,51 @@
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Layout from "./layout";
+import Auth from "./pages/auth";
+import ForgotPassword from "./pages/forgotPassword";
+import Home from "./pages/home";
+import Profile from "./pages/profile";
+import EditProfile from "./pages/editProfile";
+import Explore from "./pages/explore";
+import Messages from "./pages/messages";
+import NotFound from "./pages/notFound";
 import "./App.css";
 
+function PrivateRoute({ children }) {
+  const token = useSelector((state) => state.auth.token);
+  return token ? children : <Navigate to="/login" />;
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Auth />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/",
+    element: (
+      <PrivateRoute>
+        <Layout />
+      </PrivateRoute>
+    ),
+    children: [
+      { index: true, element: <Home /> },
+      { path: "explore", element: <Explore /> },
+      { path: "messages", element: <Messages /> },
+      { path: "profile", element: <Profile /> },
+      { path: "profile/:id", element: <Profile /> },
+      { path: "edit-profile", element: <EditProfile /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+]);
+
 function App() {
-  return (
-    <div>
-      <h1>Final-Project-ICHGramm</h1>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -1,0 +1,51 @@
+.footer {
+  padding: 22px 0px;
+  text-align: center;
+  height: 158px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 45px;
+}
+
+.links a,
+.links .linkBtn {
+  font-size: 12px;
+  color: #737373;
+  text-decoration: none;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.links a:hover,
+.links .linkBtn:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+  font-size: 12px;
+  color: #737373;
+}
+
+@media (max-width: 820px) {
+  .links {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    display: none;
+  }
+}

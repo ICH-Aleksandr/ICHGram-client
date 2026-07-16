@@ -1,0 +1,42 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.menu {
+  background: #fff;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90vw;
+  overflow: hidden;
+}
+
+.item {
+  width: 100%;
+  padding: 16px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #dbdbdb;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item:hover {
+  background: #f9f9f9;
+}
+
+.danger {
+  color: #ed4956;
+  font-weight: 600;
+  font-size: 16px;
+}

@@ -1,0 +1,37 @@
+.page {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 44px;
+  min-height: calc(100vh - 158px);
+  padding: 94px 20px 40px;
+}
+
+.image {
+  width: 300px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.text {
+  max-width: 625px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  padding: 8px 0px;
+  margin: 48px 0px 10px;
+}
+
+.description {
+  font-size: 16px;
+  color: #737373;
+  max-width: 475px;
+}
+
+@media (max-width: 900px) {
+  .image {
+    display: none;
+  }
+}
