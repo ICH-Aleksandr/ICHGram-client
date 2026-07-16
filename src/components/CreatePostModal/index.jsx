@@ -96,6 +96,12 @@ function CreatePostModal({ onClose, onCreated, post, onUpdated }) {
 
   return (
     <div className={styles.overlay} onClick={onClose}>
+      <button className={styles.closeBtn} onClick={onClose}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
 
         <div className={styles.header}>
